@@ -3,7 +3,6 @@
 #include <sstream>
 #include <stdexcept>
 
-// 校验一行数据是否为 6 个有效整数（w1,v1,w2,v2,w3,v3）
 bool DataLoader::IsValidLine(const std::string& line) {
     std::istringstream iss(line);
     int val;
@@ -14,34 +13,30 @@ bool DataLoader::IsValidLine(const std::string& line) {
     return count == 6;
 }
 
-// 读取 D01KP 数据文件
 std::pair<int, std::vector<ItemGroup>> DataLoader::LoadD01KPFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        throw std::runtime_error("无法打开文件：" + filePath);
+        throw std::runtime_error("无法打开文件");
     }
 
     int capacity;
     if (!(file >> capacity)) {
-        throw std::runtime_error("文件格式错误：第一行必须是背包容量");
+        throw std::runtime_error("文件格式错误");
     }
 
     std::vector<ItemGroup> groups;
     std::string line;
-    std::getline(file, line); // 跳过容量行的换行符
+    std::getline(file, line);
 
     while (std::getline(file, line)) {
         if (line.empty()) continue;
-        if (!IsValidLine(line)) {
-            throw std::runtime_error("无效数据行：" + line);
-        }
+        if (!IsValidLine(line)) continue;
 
         std::istringstream iss(line);
-        ItemGroup group;
-        iss >> group.w1 >> group.v1 >> group.w2 >> group.v2 >> group.w3 >> group.v3;
-        groups.push_back(group);
+        ItemGroup g;
+        iss >> g.w1 >> g.v1 >> g.w2 >> g.v2 >> g.w3 >> g.v3;
+        groups.push_back(g);
     }
 
-    file.close();
     return {capacity, groups};
 }
