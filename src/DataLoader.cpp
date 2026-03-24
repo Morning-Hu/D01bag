@@ -8,7 +8,7 @@ pair<int, vector<Item>> DataLoader::loadData(const string& filename)
     ifstream file(filename);
     if (!file.is_open())
     {
-        throw runtime_error("文件打开失败");
+        throw runtime_error("cannot open file");
     }
 
     int capacity, n;
